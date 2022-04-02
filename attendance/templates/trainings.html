@@ -1,0 +1,10 @@
+{% if trainings %}
+    <ul>
+    {% for training in trainings %}
+    <li><a href="{% url 'training' training.id %}">{{ training.date }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No trainings registered.</p>
+{% endif %}
+

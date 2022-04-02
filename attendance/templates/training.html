@@ -1,0 +1,13 @@
+<form action="{% url 'submit' training.id %}" method="post">
+{% csrf_token %}
+<fieldset>
+    <legend><h1>Training</h1></legend>
+    <input type="radio" name="choice" id="yes" value="yes">
+    <label for="yes">Yes</label><br>
+
+    <input type="radio" name="choice" id="no" value="no">
+    <label for="no">No</label><br>
+</fieldset>
+<input type="submit" value="Submit">
+</form>
+
