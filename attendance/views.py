@@ -1,6 +1,5 @@
 from django.http import HttpResponse, Http404
 from django.shortcuts import render, get_object_or_404
-
 from django.views import generic
 
 from .models import Player, Training
@@ -27,6 +26,4 @@ def submit(request, training_id):
 
     choice = request.POST['choice']
     return HttpResponse(f"submitted choice: {choice}")
-
-    #return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
 
