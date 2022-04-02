@@ -1,1 +1,1 @@
-web: gunicorn tracker/tracker.wsgi
+web: gunicorn tracker.wsgi
