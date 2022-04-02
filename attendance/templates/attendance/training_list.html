@@ -1,6 +1,6 @@
-{% if trainings %}
+{% if training_list %}
     <ul>
-    {% for training in trainings %}
+    {% for training in training_list %}
     <li><a href="{% url 'training' training.id %}">{{ training.date }}</a></li>
     {% endfor %}
     </ul>
