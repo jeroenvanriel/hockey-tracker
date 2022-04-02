@@ -1,3 +1,6 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
 <form action="{% url 'submit' training.id %}" method="post">
 {% csrf_token %}
 <fieldset>
@@ -10,4 +13,5 @@
 </fieldset>
 <input type="submit" value="Submit">
 </form>
+{% endblock %}
 

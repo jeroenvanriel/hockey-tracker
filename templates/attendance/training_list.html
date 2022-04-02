@@ -1,3 +1,6 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
 {% if training_list %}
     <ul>
     {% for training in training_list %}
@@ -7,4 +10,5 @@
 {% else %}
     <p>No trainings registered.</p>
 {% endif %}
+{% endblock %}
 
