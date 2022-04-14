@@ -3,8 +3,10 @@
 {% block content %}
 <form action="{% url 'submit' training.id %}" method="post">
 {% csrf_token %}
+<p>Present: {{ presence }}</p>
 <fieldset>
     <legend><h1>Training</h1></legend>
+    {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
     <input type="radio" name="choice" id="yes" value="yes">
     <label for="yes">Yes</label><br>
 
