@@ -6,7 +6,7 @@ class Training(models.Model):
     canceled = models.BooleanField(default=False)
 
     def __str__(self):
-        return str(self.date.date())
+        return str(self.date.date()) + (" (canceled)" if self.canceled else "")
 
 class Player(models.Model):
     name = models.CharField(max_length=50)
