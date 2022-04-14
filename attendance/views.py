@@ -30,7 +30,7 @@ def update_training(request, pk):
         return HttpResponseRedirect(reverse('trainings'))
 
     if request.method == 'POST':
-        choice = request.POST['choice'] == 'yes'
+        choice = 'yes' in request.POST
 
         attendance, created = Attendance.objects.update_or_create(
             player=player,

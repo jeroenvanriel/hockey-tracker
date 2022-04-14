@@ -4,14 +4,8 @@
 
 <form action="{% url 'training' training.id %}" method="post">
 {% csrf_token %}
-<input type="hidden" name="choice" value="yes">
-<input type="submit" value="Yes">
-</form>
-
-<form action="{% url 'training' training.id %}" method="post">
-{% csrf_token %}
-<input type="hidden" name="choice" value="no">
-<input type="submit" value="No">
+<input type="submit" name="yes" value="Yes">
+<input type="submit" name="no" value="No">
 </form>
 
 {% if attendance %}
