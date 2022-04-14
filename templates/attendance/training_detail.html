@@ -8,10 +8,10 @@
 <input type="submit" name="no" value="No">
 </form>
 
-{% if attendance %}
+{% if players %}
     <ul>
-    {% for entry in attendance %}
-    <li>{{ entry.player.name }}: {{ entry.presence }}</li>
+    {% for player in players %}
+    <li>{{ player.name }}: {{ player.presence }}</li>
     {% endfor %}
     </ul>
 {% else %}

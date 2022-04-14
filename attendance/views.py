@@ -5,6 +5,8 @@ from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
+from django.db.models import OuterRef, Subquery, Exists
+
 
 from .models import Player, Training, Attendance
 
@@ -50,10 +52,11 @@ def update_training(request, pk):
         except (Player.DoesNotExist, Attendance.DoesNotExist):
             pass
 
-        attendance = Attendance.objects.filter(training=training)
+        cancellations = Attendance.objects.filter(training=training, player=OuterRef('pk'), presence=False)
+        players = Player.objects.annotate(presence=~Exists(cancellations))
 
         return render(request, 'attendance/training_detail.html', {
             'presence': presence,
             'training': training,
-            'attendance': attendance,
+            'players': players,
         })
