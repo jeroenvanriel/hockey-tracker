@@ -3,6 +3,7 @@ from django.conf import settings
 
 class Training(models.Model):
     date = models.DateTimeField('date')
+    canceled = models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.date.date())
