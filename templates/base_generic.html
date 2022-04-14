@@ -7,6 +7,18 @@
  {% endif %}
 </ul>
 
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+
+<nav>
+  <a href="{% url 'trainings'%}">Trainingen</a>
+  <a href="{% url 'players'%}">Speler</a>
+</nav>
+
 {% block content %}
 {% endblock %}
-

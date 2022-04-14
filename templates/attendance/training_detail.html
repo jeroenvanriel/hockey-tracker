@@ -1,19 +1,28 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-<form action="{% url 'submit' training.id %}" method="post">
+
+<form action="{% url 'training' training.id %}" method="post">
 {% csrf_token %}
-<p>Present: {{ presence }}</p>
-<fieldset>
-    <legend><h1>Training</h1></legend>
-    {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
-    <input type="radio" name="choice" id="yes" value="yes">
-    <label for="yes">Yes</label><br>
-
-    <input type="radio" name="choice" id="no" value="no">
-    <label for="no">No</label><br>
-</fieldset>
-<input type="submit" value="Submit">
+<input type="hidden" name="choice" value="yes">
+<input type="submit" value="Yes">
 </form>
-{% endblock %}
 
+<form action="{% url 'training' training.id %}" method="post">
+{% csrf_token %}
+<input type="hidden" name="choice" value="no">
+<input type="submit" value="No">
+</form>
+
+{% if attendance %}
+    <ul>
+    {% for entry in attendance %}
+    <li>{{ entry.player.name }}: {{ entry.presence }}</li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No players registered.</p>
+{% endif %}
+</ul>
+
+{% endblock %}
