@@ -7,19 +7,15 @@ from .models import Player, Training
 def index(request):
     return render(request, 'index.html')
 
-class PlayerView(generic.ListView):
+class PlayerListView(generic.ListView):
+    model = Player
+class PlayerDetailView(generic.DetailView):
     model = Player
 
-def player(request, player_id):
-    player = get_object_or_404(Player, pk=player_id)
-    return render(request, 'player.html', {'player': player})
-
-class TrainingView(generic.ListView):
+class TrainingListView(generic.ListView):
     model = Training
-
-def training(request, training_id):
-    training = get_object_or_404(Training, pk=training_id)
-    return render(request, 'training.html', {'training': training})
+class TrainingDetailView(generic.DetailView):
+    model = Training
 
 def submit(request, training_id):
     training = get_object_or_404(Training, pk=training_id)
