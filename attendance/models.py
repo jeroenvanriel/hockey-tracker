@@ -18,7 +18,8 @@ class Player(models.Model):
 class Attendance(models.Model):
     player = models.ForeignKey(Player, on_delete=models.CASCADE)
     training = models.ForeignKey(Training, on_delete=models.CASCADE)
-    presence = models.BooleanField(default=False)
+    presence = models.BooleanField(default=True)
+    actual_presence = models.BooleanField(default=True)
 
     def __str__(self):
         return f"{self.training.date.date()}, {self.player}, {self.presence}"
