@@ -43,20 +43,10 @@ def update_training(request, pk):
         return HttpResponseRedirect(reverse('training', args=(training.id,)))
 
     else:
-        presence = True
-
-        try:
-            player = Player.objects.get(user=request.user)
-            attendance = Attendance.objects.get(training=training, player=player)
-            presence = attendance.presence
-        except (Player.DoesNotExist, Attendance.DoesNotExist):
-            pass
-
         cancellations = Attendance.objects.filter(training=training, player=OuterRef('pk'), presence=False)
         players = Player.objects.annotate(presence=~Exists(cancellations))
 
         return render(request, 'attendance/training_detail.html', {
-            'presence': presence,
             'training': training,
             'players': players,
         })
