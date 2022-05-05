@@ -10,4 +10,5 @@ urlpatterns = [
 
     path('training/', views.TrainingListView.as_view(), name='trainings'),
     path('training/<int:pk>/', views.update_presence, name='training'),
+    path('training/<int:pk>/verify/', views.verify, name='verify'),
 ]

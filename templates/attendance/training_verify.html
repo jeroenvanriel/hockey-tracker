@@ -1,0 +1,23 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+
+{% if players %}
+    <form action="{% url 'verify' training.id %}" method="post">
+        {% csrf_token %}
+
+        <ul>
+        {% for player in players %}
+            <li>{{ player.name }}: {{ player.presence }}
+                <input type="checkbox" name="{{ player.pk }}" {% if player.presence %} checked {% endif %}>
+            </li>
+        {% endfor %}
+        </ul>
+
+        <input type="submit" value="Submit">
+    </form>
+{% else %}
+    <p>No players registered.</p>
+{% endif %}
+
+{% endblock %}

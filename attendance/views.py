@@ -53,3 +53,25 @@ def update_presence(request, pk):
             'training': training,
             'players': players,
         })
+
+@permission_required('attendance.change_attendance')
+def verify(request, pk):
+    training = get_object_or_404(Training, pk=pk)
+
+    if request.method == 'POST':
+        print(request.POST)
+        for player in Player.objects.all():
+            Attendance.objects.update_or_create(player=player, training=training, defaults={
+                'actual_presence': str(player.pk) in request.POST.keys()
+            })
+
+        return HttpResponseRedirect(reverse('training', args=(training.id,)))
+
+    else:
+        cancellations = Attendance.objects.filter(training=training, player=OuterRef('pk'), presence=False)
+        players = Player.objects.annotate(presence=~Exists(cancellations))
+
+        return render(request, 'attendance/training_verify.html', {
+            'training': training,
+            'players': players,
+        })
