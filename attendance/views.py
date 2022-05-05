@@ -23,7 +23,7 @@ class TrainingListView(LoginRequiredMixin, generic.ListView):
     model = Training
 
 @login_required
-def update_training(request, pk):
+def update_presence(request, pk):
     training = get_object_or_404(Training, pk=pk)
     try:
         player = Player.objects.get(user=request.user)
