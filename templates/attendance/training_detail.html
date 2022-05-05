@@ -11,7 +11,7 @@
 {% if players %}
     <ul>
     {% for player in players %}
-    <li>{{ player.name }}: {{ player.presence }}</li>
+    <li>{{ player.name }}: {{ player.presence }}, actual: {{ player.actual_presence }}</li>
     {% endfor %}
     </ul>
 {% else %}

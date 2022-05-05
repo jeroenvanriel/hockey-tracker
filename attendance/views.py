@@ -4,7 +4,7 @@ from django.views import generic
 from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.db.models import OuterRef, Subquery, Exists
 
 
@@ -34,6 +34,8 @@ def update_presence(request, pk):
     if request.method == 'POST':
         choice = 'yes' in request.POST
 
+        # TODO: verify that it is still allowed to update presence
+
         attendance, created = Attendance.objects.update_or_create(
             player=player,
             training=training,
@@ -44,7 +46,8 @@ def update_presence(request, pk):
 
     else:
         cancellations = Attendance.objects.filter(training=training, player=OuterRef('pk'), presence=False)
-        players = Player.objects.annotate(presence=~Exists(cancellations))
+        actual = Attendance.objects.filter(training=training, player=OuterRef('pk'), actual_presence=False)
+        players = Player.objects.annotate(presence=~Exists(cancellations), actual_presence=~Exists(actual))
 
         return render(request, 'attendance/training_detail.html', {
             'training': training,
