@@ -22,4 +22,4 @@ class Attendance(models.Model):
     actual_presence = models.BooleanField(default=None, null=True, blank=True)
 
     def __str__(self):
-        return f"{self.training.date.date()}, {self.player}, {self.presence}"
+        return f"{self.training.date.date()} - {self.player}, {self.presence}, {self.actual_presence}"
