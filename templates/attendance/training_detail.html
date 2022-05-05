@@ -2,11 +2,15 @@
 
 {% block content %}
 
-<form action="{% url 'training' training.id %}" method="post">
-{% csrf_token %}
-<input type="submit" name="yes" value="Yes">
-<input type="submit" name="no" value="No">
-</form>
+{% if deadline_passed %}
+    <p><i>Deadline to update presence has passed.</i></p>
+{% else %}
+    <form action="{% url 'training' training.id %}" method="post">
+    {% csrf_token %}
+    <input type="submit" name="yes" value="Yes">
+    <input type="submit" name="no" value="No">
+    </form>
+{% endif %}
 
 {% if players %}
     <ul>

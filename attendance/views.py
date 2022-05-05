@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required, permission_required
 from django.db.models import OuterRef, Exists
-
+from django.utils import timezone
 
 from .models import Player, Training, Attendance
 
@@ -25,6 +25,7 @@ class TrainingListView(LoginRequiredMixin, generic.ListView):
 @login_required
 def update_presence(request, pk):
     training = get_object_or_404(Training, pk=pk)
+    deadline_passed = timezone.now() > training.deadline if training.deadline else False
     try:
         player = Player.objects.get(user=request.user)
     except Player.DoesNotExist:
@@ -34,7 +35,9 @@ def update_presence(request, pk):
     if request.method == 'POST':
         choice = 'yes' in request.POST
 
-        # TODO: verify that it is still allowed to update presence
+        if deadline_passed:
+            messages.error(request, "The deadline to update presence has passed.")
+            return HttpResponseRedirect(reverse('trainings'))
 
         attendance, created = Attendance.objects.update_or_create(
             player=player,
@@ -52,6 +55,7 @@ def update_presence(request, pk):
         return render(request, 'attendance/training_detail.html', {
             'training': training,
             'players': players,
+            'deadline_passed': deadline_passed,
         })
 
 @permission_required('attendance.change_attendance')
