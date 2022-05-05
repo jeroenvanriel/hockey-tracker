@@ -1,11 +1,11 @@
-from django.http import HttpResponse, HttpResponseRedirect, Http404
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
 from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required, permission_required
-from django.db.models import OuterRef, Subquery, Exists
+from django.db.models import OuterRef, Exists
 
 
 from .models import Player, Training, Attendance
