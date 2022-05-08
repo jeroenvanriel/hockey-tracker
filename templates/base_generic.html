@@ -1,24 +1,40 @@
-<ul class="sidebar-nav">
- {% if user.is_authenticated %}
-   <li>User: {{ user.get_username }}</li>
-   <li><a href="{% url 'logout'%}?next={{request.path}}">Logout</a></li>
- {% else %}
-   <li><a href="{% url 'login'%}?next={{request.path}}">Login</a></li>
- {% endif %}
-</ul>
+{% load static %}
+
+<head>
+  <!-- tailwind -->
+  <link rel="stylesheet" type="text/css" href="{% static 'css/tailwind.css' %}">
+</head>
+
+<div class="max-w-3xl mx-auto px-6 border-2">
 
 {% if messages %}
-<ul class="messages">
+<ul>
     {% for message in messages %}
     <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
     {% endfor %}
 </ul>
 {% endif %}
 
-<nav>
-  <a href="{% url 'trainings'%}">Trainingen</a>
-  <a href="{% url 'players'%}">Speler</a>
-</nav>
+<div class="grid grid-cols-2 gap-2 my-2">
+  <nav clas="">
+    <a href="{% url 'trainings'%}" class="border border-gray-600 rounded inline-block px-2 py-1">Trainingen</a>
+    <a href="{% url 'players'%}" class="border border-gray-600 rounded inline-block px-2 py-1">Speler</a>
+  </nav>
 
+  <ul class="justify-self-end">
+  {% if user.is_authenticated %}
+    <li>User: {{ user.get_username }}</li>
+    <li><a href="{% url 'logout'%}?next={{request.path}}" class="border border-gray-600 rounded inline-block px-2 py-1">Logout</a></li>
+  {% else %}
+    <li><a href="{% url 'login'%}?next={{request.path}}" class="border border-gray-600 rounded inline-block px-2 py-1">Login</a></li>
+  {% endif %}
+  </ul>
+</div>
+
+
+<div class="flex flex-col py-10">
 {% block content %}
 {% endblock %}
+</div>
+
+</div>

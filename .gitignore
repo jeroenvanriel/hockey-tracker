@@ -1,1 +1,5 @@
 data/
+
+cssbuild/node_modules/
+# this one is generated
+static/css/tailwind.css

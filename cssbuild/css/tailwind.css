@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+input {
+    @apply border rounded px-2 py-1;
+}
+
+button, input[type=submit] {
+    @apply border border-gray-600 rounded px-2 py-1 cursor-pointer;
+}
