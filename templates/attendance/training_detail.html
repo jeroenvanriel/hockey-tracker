@@ -6,16 +6,22 @@
     <p><i>Deadline to update presence has passed.</i></p>
 {% else %}
     <form action="{% url 'training' training.id %}" method="post">
-    {% csrf_token %}
-    <input type="submit" name="yes" value="Yes">
-    <input type="submit" name="no" value="No">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-6 d-grid">
+            <input type="submit" name="yes" value="Yes" class="btn btn-dark">
+            </div>
+            <div class="col-6 d-grid">
+            <input type="submit" name="no" value="No" class="btn btn-dark">
+            </div>
+        </div>
     </form>
 {% endif %}
 
 {% if players %}
-    <ul>
+    <ul class="list-group mt-4">
     {% for player in players %}
-    <li>{{ player.name }}: {{ player.presence }}, actual: {{ player.actual_presence }}</li>
+    <li class="list-group-item"><b>{{ player.name }}</b>: {{ player.presence }}, actual: {{ player.actual_presence }}</li>
     {% endfor %}
     </ul>
 {% else %}

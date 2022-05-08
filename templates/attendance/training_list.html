@@ -2,11 +2,11 @@
 
 {% block content %}
 {% if training_list %}
-    <ul>
+    <div class="list-group">
     {% for training in training_list %}
-    <li><a href="{% url 'training' training.id %}">{{ training.date }}</a></li>
+    <a class="list-group-item list-group-item-action" href="{% url 'training' training.id %}">{{ training.date }}</a>
     {% endfor %}
-    </ul>
+    </div>
 {% else %}
     <p>No trainings registered.</p>
 {% endif %}
