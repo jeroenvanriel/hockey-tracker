@@ -2,39 +2,60 @@
 
 {% block content %}
 
-  {% if form.errors %}
-    <p>Your username and password didn't match. Please try again.</p>
-  {% endif %}
+{% if form.errors %}
+  <p>Your username and password didn't match. Please try again.</p>
+{% endif %}
 
+<div class="row mt-2 mb-4 justify-content-center">
+  <div class="col-sm-7">
   {% if next %}
     {% if user.is_authenticated %}
-      <p>Your account doesn't have access to this page. To proceed,
-      please login with an account that has access.</p>
-    {% else %}
-      <p>Please login to see this page.</p>
+      Your account doesn't have access to this page. To proceed,
+      please login with an account that has access.
+    {% comment "this message is optional" %}
+      {% else %}
+        Please login to see this page.
+    {% endcomment %}
     {% endif %}
   {% endif %}
+  </div>
+</div>
 
-  <form method="post" action="{% url 'login' %}">
-    {% csrf_token %}
-    <table>
-      <tr>
-        <td>{{ form.username.label_tag }}</td>
-        <td>{{ form.username }}</td>
-      </tr>
-      <tr>
-        <td>{{ form.password.label_tag }}</td>
-        <td>{{ form.password }}</td>
-      </tr>
-    </table>
-    <input type="submit" value="login" />
-    <input type="hidden" name="next" value="{{ next }}" />
-  </form>
+<form method="post" action="{% url 'login' %}">
+  {% csrf_token %}
+  <div class="row mb-2 justify-content-center">
+    <div class="col-sm-7">
+      {{ form.username }}
+    </div>
+  </div>
 
-  {# Assumes you setup the password_reset view in your URLconf #}
-  <p><a href="{% url 'password_reset' %}">Lost password?</a></p>
+  <div class="row mb-2 justify-content-center">
+    <div class="col-sm-7">
+      {{ form.password }}
+    </div>
+  </div>
 
-  <p><a href="{% url 'register' %}">Register new user</a></p>
+  <div class="row mb-2 justify-content-center">
+    <div class="col-sm-7">
+      <div class="d-grid">
+        <input type="submit" value="Login" class="btn btn-primary " />
+      </div>
+      <input type="hidden" name="next" value="{{ next }}" />
+    </div>
+  </div>
+</form>
+
+<div class="row justify-content-center">
+  <div class="col-sm-6">
+    <div class="row gx-1 justify-content-center">
+      <div class="col-6 text-center">
+        <a href="{% url 'password_reset' %}">Lost password?</a>
+      </div>
+      <div class="col-6 text-center">
+        <a href="{% url 'register' %}">Register new user</a>
+      </div>
+    </div>
+  </div>
+</div>
 
 {% endblock %}
-
