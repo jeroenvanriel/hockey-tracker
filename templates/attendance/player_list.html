@@ -2,11 +2,11 @@
 
 {% block content %}
 {% if player_list %}
-    <ul>
+    <div class="list-group">
     {% for player in player_list %}
-    <li><a href="{% url 'player' player.id %}">{{ player.name }}</a></li>
+    <a class="list-group-item list-group-item-action" href="{% url 'player' player.id %}">{{ player.name }}</a>
     {% endfor %}
-    </ul>
+    </div>
 {% else %}
     <p>No players registered.</p>
 {% endif %}
