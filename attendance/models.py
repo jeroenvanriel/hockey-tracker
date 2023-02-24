@@ -26,3 +26,8 @@ class Attendance(models.Model):
 
     def __str__(self):
         return f"{self.training.date.date()} - {self.player}, {self.presence}, {self.actual_presence}"
+
+class Fine(models.Model):
+    attendance = models.OneToOneField(Attendance, null=True, on_delete=models.SET_NULL)
+    amount = models.FloatField()
+    paid = models.BooleanField(default=False)
