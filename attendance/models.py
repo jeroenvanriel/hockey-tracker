@@ -10,8 +10,10 @@ class Training(models.Model):
         return str(self.date.date()) + (" (canceled)" if self.canceled else "")
 
 class Player(models.Model):
+    """This decoupling from the user (authentication) enables us to start using the app before
+    users login and do certain things themselves."""
     name = models.CharField(max_length=50)
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, null=True, on_delete=models.SET_NULL)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.SET_NULL)
 
     def __str__(self):
         return self.name
