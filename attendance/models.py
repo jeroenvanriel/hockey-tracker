@@ -1,5 +1,7 @@
 from django.db import models
 from django.conf import settings
+import datetime
+from .apps import DEADLINE_DELTA, DEADLINE_TIME
 
 class Training(models.Model):
     date = models.DateTimeField('date')
@@ -9,6 +11,14 @@ class Training(models.Model):
 
     def __str__(self):
         return str(self.date.date()) + (" (canceled)" if self.canceled else "")
+
+    def save(self, *args, **kwargs):
+        if not self.deadline:
+            # move the deadline the specified number of days backward
+            # and set the default deadline time (e.g. 23:59)
+            self.deadline = (self.date - datetime.timedelta(days=DEADLINE_DELTA)).replace(
+                hour=DEADLINE_TIME.hour, minute=DEADLINE_TIME.minute, second=DEADLINE_TIME.second)
+        super().save(*args, **kwargs)
 
 class Player(models.Model):
     """This decoupling from the user (authentication) enables us to start using the app before
