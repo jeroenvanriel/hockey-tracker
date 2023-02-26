@@ -21,6 +21,7 @@ class PlayerDetailView(LoginRequiredMixin, generic.DetailView):
 
 class TrainingListView(LoginRequiredMixin, generic.ListView):
     model = Training
+    queryset = Training.objects.filter(verified=False, date__gte = timezone.now()).order_by('date')
 
 @login_required
 def update_presence(request, pk):
