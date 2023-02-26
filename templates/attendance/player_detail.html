@@ -9,32 +9,30 @@
 {% if player.any_fines %}
 <h4 class="mt-4">Openstaande boetes</h4>
 <table class="table">
-    <thead>
+<thead>
+    <tr>
+        <th scope="col">datum</th>
+        <th scope="col">bedrag</th>
+    </tr>
+</thead>
+<tbody>
+
+    {% for attendance in player.attendances.all %}
+        {% if attendance.fine and not attendance.fine.paid %}
         <tr>
-            <th scope="col">datum</th>
-            <th scope="col">bedrag</th>
+            <td>{{ attendance.training.date | date:"d F Y" }}</td>
+            <td>€ {{ attendance.fine.amount | floatformat:2 }}</td>
         </tr>
-    </thead>
-    <tbody>
+        {% endif %}
+    {% endfor %}
 
-{% for attendance in player.attendances.all %}
-{% if attendance.fine and not attendance.fine.paid %}
-<tr>
-    <td>{{ attendance.training.date | date:"d F Y" }}</td>
-    <td>€ {{ attendance.fine.amount | floatformat:2 }}</td>
-</tr>
-{% endif %}
-{% endfor %}
-
-<tr style="border-top-width: 2px;">
-    <td>Totaal </td>
-    <td>€ {{ player.total_fine | floatformat:2 }}</td>
-</tr>
-    </tbody>
-
+    <tr style="border-top-width: 2px;">
+        <td>Totaal </td>
+        <td>€ {{ player.total_fine | floatformat:2 }}</td>
+    </tr>
+</tbody>
 
 </table>
-
 
 {% else %}
 <p>Geen boetes</p>
