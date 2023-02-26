@@ -43,19 +43,21 @@
       <input type="hidden" name="next" value="{{ next }}" />
     </div>
   </div>
-</form>
 
-<div class="row justify-content-center">
-  <div class="col-sm-6">
-    <div class="row gx-1 justify-content-center">
-      <div class="col-6 text-center">
-        <a href="{% url 'password_reset' %}">Lost password?</a>
-      </div>
-      <div class="col-6 text-center">
-        <a href="{% url 'register' %}">Register new user</a>
+  <div class="row mb-2 justify-content-center">
+    <div class="col-sm-7">
+      <div class="row gx-1 justify-content-center">
+        <div class="col-6 text-center">
+          <a href="{% url 'password_reset' %}">Lost password?</a>
+        </div>
+        <div class="col-6 text-center">
+          <a href="{% url 'register' %}">Register new user</a>
+        </div>
       </div>
     </div>
   </div>
-</div>
+
+</form>
+
 
 {% endblock %}
