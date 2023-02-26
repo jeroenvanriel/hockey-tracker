@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.db.models import OuterRef, Exists
 from django.utils import timezone
 
-from .models import Player, Training, Attendance
+from .models import Player, Training, Attendance, Fine
 
 def index(request):
     return render(request, 'index.html')
