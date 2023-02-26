@@ -2,8 +2,10 @@
 
 {% block content %}
 
-{% if deadline_passed %}
-    <p><i>Deadline to update presence has passed.</i></p>
+{% if training.verified %}
+    <p><i>This training has been verified and closed.</i></p>
+{% elif deadline_passed %}
+    <p><i>Deadline {{training.deadline |date:"j M Y"}} to update presence has passed.</i></p>
 {% else %}
     <form action="{% url 'training' training.id %}" method="post">
         {% csrf_token %}
@@ -21,7 +23,7 @@
 {% if players %}
     <ul class="list-group mt-4">
     {% for player in players %}
-    <li class="list-group-item"><b>{{ player.name }}</b>: {{ player.presence }}, actual: {{ player.actual_presence }}</li>
+    <li class="list-group-item"><b>{{ player.name }}</b>: {{ player.presence }} {% if training.verified %}, actual: {{ player.actual_presence }}{% endif %}</li>
     {% endfor %}
     </ul>
 {% else %}
