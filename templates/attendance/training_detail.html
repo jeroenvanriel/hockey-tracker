@@ -11,19 +11,35 @@
         {% csrf_token %}
         <div class="row">
             <div class="col-6 d-grid">
-            <input type="submit" name="yes" value="Yes" class="btn btn-success">
+            <input type="submit" name="yes" value="Ben er bij!" class="btn btn-success">
             </div>
             <div class="col-6 d-grid">
-            <input type="submit" name="no" value="No" class="btn btn-danger">
+            <input type="submit" name="no" value="Ik kom niet." class="btn btn-danger">
             </div>
         </div>
     </form>
 {% endif %}
 
 {% if players %}
+    <h4 class="mt-4">{{ training.date | date:"d F Y" }}: Verwacht {{ players_present }} spelers.</h4> 
+
     <ul class="list-group mt-4">
     {% for player in players %}
-    <li class="list-group-item"><b>{{ player.name }}</b>: {{ player.presence }} {% if training.verified %}, actual: {{ player.actual_presence }}{% endif %}</li>
+    <li class="list-group-item {% if not player.presence %} list-group-item-light {% else %} list-group-item-success {% endif %}">
+        <i class="bi bi-1-square"></i>
+        {% if player.presence %}
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="green" class="bi bi-check-lg" viewBox="0 0 16 16">
+            <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"/>
+        </svg>
+        {% else %}
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" class="bi bi-x-lg" viewBox="0 0 16 16">
+            <path d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/>
+        </svg>
+        {% endif %}
+        {% if training.verified %}, actual: {{ player.actual_presence }}{% endif %}
+        &nbsp;
+        <b class="{% if not player.presence %} text-muted {% endif %}">{{ player.name }}</b>
+    </li>
     {% endfor %}
     </ul>
 {% else %}
