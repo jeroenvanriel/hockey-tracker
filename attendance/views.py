@@ -5,7 +5,7 @@ from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required, permission_required
-from django.db.models import OuterRef, Exists
+from django.db.models import OuterRef, Exists, Sum
 from django.utils import timezone
 
 from .models import Player, Training, Attendance, Fine
@@ -18,6 +18,16 @@ class PlayerListView(LoginRequiredMixin, generic.ListView):
 
 class PlayerDetailView(LoginRequiredMixin, generic.DetailView):
     model = Player
+
+    def get_queryset(self):
+        # calculate remaining unpaid total fine
+        subquery = Fine.objects.filter(
+            paid=False,
+            attendance__player__pk=OuterRef('pk')
+        ).values('attendance__player__pk')
+        
+        total_fine = subquery.annotate(total_fine=Sum('amount')).values('total_fine')
+        return Player.objects.annotate(total_fine=total_fine, any_fines=Exists(subquery))
 
 class TrainingListView(LoginRequiredMixin, generic.ListView):
     model = Training

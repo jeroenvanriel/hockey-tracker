@@ -1,6 +1,44 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-{{ player.name }}
+<div style="display: flex; align-items: center;" class="mb-2">
+    <a class="btn btn-primary mr-4" href="{% url 'players' %}">Back</a>
+    <h2 style="margin-left: 15px; padding-top: 5px;">{{ player.name }}</h2>
+</div>
+
+{% if player.any_fines %}
+<h4 class="mt-4">Openstaande boetes</h4>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope=""col">date</th>
+            <th scope=""col">amount</th>
+        </tr>
+    </thead>
+    <tbody>
+
+{% for attendance in player.attendances.all %}
+{% if attendance.fine and not attendance.fine.paid %}
+<tr>
+    <td>{{ attendance.training.date | date:"j M Y" }}</td>
+    <td>€ {{ attendance.fine.amount | floatformat:2 }}</td>
+</tr>
+{% endif %}
+{% endfor %}
+
+<tr style="border-top-width: 2px;">
+    <td>Total </td>
+    <td>€ {{ player.total_fine | floatformat:2 }}</td>
+</tr>
+    </tbody>
+
+
+</table>
+
+
+{% else %}
+<p>Geen boetes</p>
+{% endif %}
+
 {% endblock %}
 

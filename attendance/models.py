@@ -30,7 +30,7 @@ class Player(models.Model):
         return self.name
 
 class Attendance(models.Model):
-    player = models.ForeignKey(Player, on_delete=models.CASCADE)
+    player = models.ForeignKey(Player, related_name='attendances', on_delete=models.CASCADE)
     training = models.ForeignKey(Training, on_delete=models.CASCADE)
     presence = models.BooleanField(default=True)
     actual_presence = models.BooleanField(default=None, null=True, blank=True)
