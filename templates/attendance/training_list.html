@@ -1,6 +1,11 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
+
+<div style="display: flex; align-items: center;" class="mb-2">
+    <h2 style="margin-left: 15px; padding-top: 5px;">Komende Trainingen</h2>
+</div>
+
 {% if training_list %}
     <div class="list-group">
     {% for training in training_list %}
