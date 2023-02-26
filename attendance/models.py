@@ -5,6 +5,7 @@ class Training(models.Model):
     date = models.DateTimeField('date')
     canceled = models.BooleanField(default=False)
     deadline = models.DateTimeField('deadline', default=None, null=True, blank=True)
+    verified = models.BooleanField(default=False)
 
     def __str__(self):
         return str(self.date.date()) + (" (canceled)" if self.canceled else "")
