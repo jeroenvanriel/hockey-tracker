@@ -11,7 +11,15 @@ from django.utils import timezone
 from .models import Player, Training, Attendance, Fine
 
 def index(request):
-    return render(request, 'index.html')
+    return render(request, 'index.html', {
+        'total_unpaid_fines': Fine.objects.filter(paid=False).aggregate(Sum('amount'))['amount__sum'],
+        'upcoming_training': Training.objects.filter(date__gte=timezone.now()).order_by('date').first(),
+        # TODO: player with highest fine
+        # TODO: player with highest unpaid fine
+        # TODO: player with highest attendance
+        # TODO: player with lowest attendance
+        # TODO: make the above per season (so we first need to introduce this concept of season)
+    })
 
 class PlayerListView(LoginRequiredMixin, generic.ListView):
     model = Player

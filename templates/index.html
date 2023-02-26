@@ -1,5 +1,14 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-<p>Welcome!</p>
+
+<p>Welkom!</p>
+
+Volgende training is <a href="{% url 'training' upcoming_training.pk %}"> {{ upcoming_training.date }} </a>.
+<br />
+
+{% if total_unpaid_fines > 0 %}
+Totaal openstaande boetes: € {{ total_unpaid_fines | floatformat:2 }} .
+{% endif %}
+
 {% endblock %}
