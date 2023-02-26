@@ -4,7 +4,10 @@
 {% if training_list %}
     <div class="list-group">
     {% for training in training_list %}
-    <a class="list-group-item list-group-item-action" href="{% url 'training' training.id %}">{{ training.date }}</a>
+    <a class="list-group-item list-group-item-action" href="{% url 'training' training.id %}">
+        {{ training.date | date:"d F Y" }} &nbsp;
+        <span style="font-size: small;">{{ training.date | date:"H:i" }}</span>
+    </a>
     {% endfor %}
     </div>
 {% else %}
