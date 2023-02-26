@@ -65,13 +65,30 @@ def verify(request, pk):
     if request.method == 'POST':
         print(request.POST)
         for player in Player.objects.all():
-            Attendance.objects.update_or_create(player=player, training=training, defaults={
-                'actual_presence': str(player.pk) in request.POST.keys()
+            try:
+                said_presence = Attendance.objects.get(player=player, training=training).presence
+            except Attendance.DoesNotExist:
+                said_presence = True # assume presence by default
+
+            # record the actual presence
+            actual_presence = str(player.pk) in request.POST.keys()
+            attendance, _ = Attendance.objects.update_or_create(player=player, training=training, defaults={
+                'actual_presence': actual_presence
             })
+
+            if said_presence and not actual_presence:
+                # TODO: determine fine amount based on training or game, or maybe
+                # even on the amount of minutes late. The latter could even be
+                # implemented automatically, but then we need a route for partial
+                # "he was late" requests.
+                Fine.objects.update_or_create(attendance=attendance, amount=5)
+        
+        training.verified = True
+        training.save()
 
         return HttpResponseRedirect(reverse('training', args=(training.id,)))
 
-    else:
+    elif not training.verified:
         cancellations = Attendance.objects.filter(training=training, player=OuterRef('pk'), presence=False)
         players = Player.objects.annotate(presence=~Exists(cancellations))
 
@@ -79,3 +96,9 @@ def verify(request, pk):
             'training': training,
             'players': players,
         })
+
+    else:
+        # TODO: In case we want to support (partial) updates, make sure to return the actual
+        # presence to show on the update page 
+        messages.error(request, "This training has already been verified.")
+        return HttpResponseRedirect(reverse('training', args=(training.id)))
