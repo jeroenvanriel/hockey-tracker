@@ -6,4 +6,4 @@ poetry install
 
 python manage.py collectstatic --no-input
 python manage.py migrate
-python manage.py createsuperuser --no-input --username admin
+python manage.py createsuperuser --no-input --email "jeroenvanriel@outlook.com" --username admin
