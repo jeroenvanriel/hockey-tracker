@@ -11,8 +11,8 @@
 <table class="table">
     <thead>
         <tr>
-            <th scope=""col">date</th>
-            <th scope=""col">amount</th>
+            <th scope=""col">datum</th>
+            <th scope=""col">bedrag</th>
         </tr>
     </thead>
     <tbody>
@@ -20,14 +20,14 @@
 {% for attendance in player.attendances.all %}
 {% if attendance.fine and not attendance.fine.paid %}
 <tr>
-    <td>{{ attendance.training.date | date:"j M Y" }}</td>
+    <td>{{ attendance.training.date | date:"d F Y" }}</td>
     <td>€ {{ attendance.fine.amount | floatformat:2 }}</td>
 </tr>
 {% endif %}
 {% endfor %}
 
 <tr style="border-top-width: 2px;">
-    <td>Total </td>
+    <td>Totaal </td>
     <td>€ {{ player.total_fine | floatformat:2 }}</td>
 </tr>
     </tbody>
