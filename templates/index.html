@@ -10,7 +10,7 @@ Volgende training is <a href="{% url 'training' upcoming_training.pk %}"> {{ upc
 {% endif %}
 
 {% if total_unpaid_fines > 0 %}
-Totaal openstaande boetes: € {{ total_unpaid_fines | floatformat:2 }} .
+Totaal openstaande boetes: € {{ total_unpaid_fines | floatformat:2 }}.
 {% endif %}
 
 {% endblock %}
