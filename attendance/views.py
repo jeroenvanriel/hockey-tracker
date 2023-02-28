@@ -122,4 +122,4 @@ def verify(request, pk):
         # TODO: In case we want to support (partial) updates, make sure to return the actual
         # presence to show on the update page 
         messages.error(request, "This training has already been verified.")
-        return HttpResponseRedirect(reverse('training', args=(training.id)))
+        return HttpResponseRedirect(reverse('training', args=(training.id,)))
