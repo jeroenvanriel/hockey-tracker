@@ -6,15 +6,18 @@
     <form action="{% url 'verify' training.id %}" method="post">
         {% csrf_token %}
 
-        <ul>
+        <div class="list-group">
         {% for player in players %}
-            <li>{{ player.name }}: {{ player.presence }}
-                <input type="checkbox" name="{{ player.pk }}" {% if player.presence %} checked {% endif %}>
-            </li>
+            <!-- {{ player.name }}: {{ player.presence }} -->
+            <input type="checkbox" class="btn-check" id="btn-check-{{ player.pk }}"
+                {% if player.presence %} checked {% endif %} autocomplete="off" name="{{ player.pk }}">
+            <label class="list-group-item btn-outline-success" for="btn-check-{{ player.pk }}">Present</label>
         {% endfor %}
-        </ul>
+        </div>
 
-        <input class="btn btn-primary" type="submit" value="Submit">
+        <div class="d-grid mt-4">
+            <input class="btn btn-primary" type="submit" value="Submit">
+        </div>
     </form>
 {% else %}
     <p>No players registered.</p>
