@@ -4,6 +4,11 @@ import datetime
 from .apps import DEADLINE_DELTA, DEADLINE_TIME
 
 class Training(models.Model):
+    class Meta:
+        permissions = [
+            ('verify_training', 'Verify attendance of players that said they would come.')
+        ]
+
     date = models.DateTimeField('date')
     canceled = models.BooleanField(default=False)
     deadline = models.DateTimeField('deadline', default=None, null=True, blank=True)

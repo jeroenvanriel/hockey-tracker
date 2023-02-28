@@ -77,9 +77,10 @@ def update_presence(request, pk):
             'players': players,
             'deadline_passed': deadline_passed,
             'players_present': players_present,
+            'user_can_verify': request.user.has_perm('attendance.training_verify'),
         })
 
-@permission_required('attendance.change_attendance')
+@permission_required('attendance.training_verify')
 def verify(request, pk):
     training = get_object_or_404(Training, pk=pk)
 

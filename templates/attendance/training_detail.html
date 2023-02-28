@@ -47,4 +47,10 @@
 {% endif %}
 </ul>
 
+{% if not training.verified and user_can_verify %}
+<div class="d-grid mt-4">
+<a class="btn btn-primary" href="{% url 'verify' training.id %}">Verify</a>
+</div>
+{% endif %}
+
 {% endblock %}
