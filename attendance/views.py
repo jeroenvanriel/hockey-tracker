@@ -70,13 +70,13 @@ def update_presence(request, pk):
         cancellations = Attendance.objects.filter(training=training, player=OuterRef('pk'), presence=False)
         actual = Attendance.objects.filter(training=training, player=OuterRef('pk'), actual_presence=False)
         players = Player.objects.annotate(presence=~Exists(cancellations), actual_presence=~Exists(actual))
-        players_present = players.filter(presence=True).count()
+        nr_players_present = players.filter(presence=True).count()
 
         return render(request, 'attendance/training_detail.html', {
             'training': training,
             'players': players,
             'deadline_passed': deadline_passed,
-            'players_present': players_present,
+            'nr_players_present': nr_players_present,
             'user_can_verify': request.user.has_perm('attendance.training_verify'),
         })
 

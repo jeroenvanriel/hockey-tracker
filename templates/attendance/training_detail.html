@@ -21,7 +21,7 @@
 {% endif %}
 
 {% if players %}
-    <h4 class="mt-4">{{ training.date | date:"d F Y" }}: Verwacht {{ players_present }} spelers.</h4> 
+    <h4 class="mt-4">{{ training.date | date:"d F Y" }}: Verwacht {{ nr_players_present }} spelers.</h4> 
 
     <ul class="list-group mt-4">
     {% for player in players %}
