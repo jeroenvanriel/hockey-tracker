@@ -6,12 +6,11 @@
     <form action="{% url 'verify' training.id %}" method="post">
         {% csrf_token %}
 
-        <div class="list-group">
+        <div class="list-group btn-group-vertical btn-group-toggle" data-toggle="buttons">
         {% for player in players %}
-            <!-- {{ player.name }}: {{ player.presence }} -->
             <input type="checkbox" class="btn-check" id="btn-check-{{ player.pk }}"
                 {% if player.presence %} checked {% endif %} autocomplete="off" name="{{ player.pk }}">
-            <label class="list-group-item btn-outline-success" for="btn-check-{{ player.pk }}">Present</label>
+            <label class="btn btn-outline-success" for="btn-check-{{ player.pk }}">{{ player.name }}</label>
         {% endfor %}
         </div>
 
