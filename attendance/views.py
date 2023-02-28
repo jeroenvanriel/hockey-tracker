@@ -5,7 +5,7 @@ from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required, permission_required
-from django.db.models import OuterRef, Exists, Sum
+from django.db.models import OuterRef, Exists, Sum, Count
 from django.utils import timezone
 
 from .models import Player, Training, Attendance, Fine
@@ -37,9 +37,17 @@ class PlayerDetailView(LoginRequiredMixin, generic.DetailView):
         total_fine = subquery.annotate(total_fine=Sum('amount')).values('total_fine')
         return Player.objects.annotate(total_fine=total_fine, any_fines=Exists(subquery))
 
-class TrainingListView(LoginRequiredMixin, generic.ListView):
-    model = Training
-    queryset = Training.objects.filter(verified=False, date__gte = timezone.now()).order_by('date')
+def training_overview(request):
+    trainings = Training.objects.filter(verified=False, date__gte = timezone.now()).order_by('date')
+
+    # this way, because I don't know how to do this with an annotation
+    for training in trainings:
+        cancellations = Attendance.objects.filter(training=training, player=OuterRef('pk'), presence=False)
+        actual = Attendance.objects.filter(training=training, player=OuterRef('pk'), actual_presence=False)
+        players = Player.objects.annotate(presence=~Exists(cancellations), actual_presence=~Exists(actual))
+        training.nr_players_present = players.filter(presence=True).count()
+
+    return render(request, 'attendance/training_list.html', { 'training_list': trainings })
 
 @login_required
 def update_presence(request, pk):

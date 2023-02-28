@@ -10,6 +10,7 @@
     <a class="list-group-item list-group-item-action" href="{% url 'training' training.id %}">
         {{ training.date | date:"d F Y" }} &nbsp;
         <span style="font-size: small;">{{ training.date | date:"H:i" }}</span>
+        <div style="float: right;">{{ training.nr_players_present }} verwacht</div> 
     </a>
     {% endfor %}
     </div>
