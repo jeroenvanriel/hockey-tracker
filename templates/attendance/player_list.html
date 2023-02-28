@@ -7,7 +7,10 @@
 {% if player_list %}
     <div class="list-group">
     {% for player in player_list %}
-    <a class="list-group-item list-group-item-action" href="{% url 'player' player.id %}">{{ player.name }}</a>
+    <a class="list-group-item list-group-item-action" href="{% url 'player' player.id %}">
+        {{ player.name }}
+        <div style="float: right;">€ {{ player.total_fine | floatformat:2 }}</div>
+    </a>
     {% endfor %}
     </div>
 {% else %}
