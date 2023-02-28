@@ -113,12 +113,13 @@ def verify(request, pk):
     elif not training.verified:
         cancellations = Attendance.objects.filter(training=training, player=OuterRef('pk'), presence=False)
         players = Player.objects.annotate(presence=~Exists(cancellations))
-        players_present = players.filter(presence=True).count()
+        players_present = players.filter(presence=True)
+        nr_players_present = players.filter(presence=True).count()
 
         return render(request, 'attendance/training_verify.html', {
             'training': training,
-            'players': players,
             'players_present': players_present,
+            'nr_players_present': nr_players_present,
         })
 
     else:

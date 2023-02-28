@@ -2,14 +2,14 @@
 
 {% block content %}
 
-{% if players %}
-    <h4 class="mt-4">{{ training.date | date:"d F Y" }}: Verwacht {{ players_present }} spelers.</h4> 
+{% if players_present %}
+    <h4 class="mt-4">{{ training.date | date:"d F Y" }}: Verwacht {{ nr_players_present }} spelers.</h4> 
 
     <form action="{% url 'verify' training.id %}" method="post">
         {% csrf_token %}
 
         <div class="mt-4 list-group btn-group-vertical btn-group-toggle" data-toggle="buttons">
-        {% for player in players %}
+        {% for player in players_present %}
             <input type="checkbox" class="btn-check" id="btn-check-{{ player.pk }}"
                 {% if player.presence %} checked {% endif %} autocomplete="off" name="{{ player.pk }}">
             <label class="btn btn-outline-success" for="btn-check-{{ player.pk }}">{{ player.name }}</label>
