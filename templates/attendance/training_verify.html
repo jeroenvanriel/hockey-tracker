@@ -3,7 +3,10 @@
 {% block content %}
 
 {% if players_present %}
-    <h4 class="mt-4">{{ training.date | date:"d F Y" }}: Verwacht {{ nr_players_present }} spelers.</h4> 
+    <h4 class="mt-4">{{ training.date | date:"d F Y" }}
+        <span style="font-size: medium;">{{ training.date | date:"H:i" }}</span>
+        <div style="float:right;">{{ nr_players_present }} verwacht</div>
+    </h4> 
 
     <form action="{% url 'verify' training.id %}" method="post">
         {% csrf_token %}
