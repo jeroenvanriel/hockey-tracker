@@ -45,13 +45,13 @@ class TrainingListView(LoginRequiredMixin, generic.ListView):
 def update_presence(request, pk):
     training = get_object_or_404(Training, pk=pk)
     deadline_passed = timezone.now() > training.deadline if training.deadline else False
-    try:
-        player = Player.objects.get(user=request.user)
-    except Player.DoesNotExist:
-        messages.error(request, "Your account is not linked to a registered player.")
-        return HttpResponseRedirect(reverse('trainings'))
+    player = Player.objects.filter(user=request.user).first()
 
     if request.method == 'POST':
+        if not player:
+            messages.error(request, "Your account is not linked to a registered player.")
+            return HttpResponseRedirect(reverse('training', args=(training.id,)))
+
         choice = 'yes' in request.POST
 
         if deadline_passed:
