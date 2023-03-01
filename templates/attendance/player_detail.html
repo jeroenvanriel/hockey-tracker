@@ -6,28 +6,54 @@
     <h2 style="margin-left: 15px; padding-top: 5px;">{{ player.name }}</h2>
 </div>
 
-{% if player.any_fines %}
+{% if player.any_fines or perms.attendance.fine_paid %}
 <h4 class="mt-4">Openstaande boetes</h4>
 <table class="table">
 <thead>
     <tr>
         <th scope="col">datum</th>
         <th scope="col">bedrag</th>
+        <th scope="col" style="text-align: center;">betaald</th>
     </tr>
 </thead>
 <tbody>
 
     {% for attendance in player.attendances.all %}
-        {% if attendance.fine and not attendance.fine.paid %}
+        {% if attendance.fine %}
         <tr>
             <td>{{ attendance.training.date | date:"d F Y" }}</td>
             <td>€ {{ attendance.fine.amount | floatformat:2 }}</td>
+            <td style="text-align: center;"">
+                {% if attendance.fine.paid %}
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="green" class="bi bi-check-lg" viewBox="0 0 16 16">
+                        <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"/>
+                    </svg>
+                {% else %}
+                    <span class="badge bg-danger">nee</span>
+                {% endif %}
+            </td>
+
+            {% if perms.attendance.fine_paid %}
+            <td>
+                <form action="{% url 'fine_paid' player.id %}" method="post">
+                    {% csrf_token %}
+                    {% if not attendance.fine.paid %}
+                    <button  type="submit" name="paid" value="{{ attendance.fine.id }}" class="btn btn-sm btn-primary">check
+                    </button>
+                    {% else %}
+                    <button  type="submit" name="reset" value="{{ attendance.fine.id }}" class="btn btn-sm btn-light">reset
+                    </button>
+                    {% endif %}
+                </form>
+            </td>
+            {% endif %}
+
         </tr>
         {% endif %}
     {% endfor %}
 
     <tr style="border-top-width: 2px;">
-        <td>Totaal </td>
+        <td>Totaal open</td>
         <td>€ {{ player.total_fine | floatformat:2 }}</td>
     </tr>
 </tbody>

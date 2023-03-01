@@ -1,4 +1,4 @@
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
 from django.urls import reverse
@@ -48,7 +48,28 @@ class PlayerDetailView(LoginRequiredMixin, generic.DetailView):
         ).values('attendance__player__pk')
         
         total_fine = subquery.annotate(total_fine=Sum('amount')).values('total_fine')
-        return Player.objects.annotate(total_fine=total_fine, any_fines=Exists(subquery))
+        return Player.objects.annotate(total_fine=Coalesce(total_fine, 0, output_field=models.FloatField()), any_fines=Exists(subquery))
+
+@permission_required('attendance.fine_paid')
+def fine_paid(request, pk):
+    """Register a fine as paid."""
+
+    player = get_object_or_404(Player, pk=pk)
+
+    if request.method != 'POST':
+        return HttpResponse(status_code=405) # method not allowed
+    
+    if 'paid' in request.POST:
+        fine = get_object_or_404(Fine, pk=request.POST['paid'])
+        fine.paid = True
+        fine.save()
+    if 'reset' in request.POST:
+        fine = get_object_or_404(Fine, pk=request.POST['reset'])
+        fine.paid = False
+        fine.save()
+
+    return HttpResponseRedirect(reverse('player', args=(player.id,)))
+
 
 def training_overview(request):
     trainings = Training.objects.filter(verified=False, date__gte = timezone.now()).order_by('date')
