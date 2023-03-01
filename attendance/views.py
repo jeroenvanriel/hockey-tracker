@@ -16,6 +16,7 @@ def index(request):
     return render(request, 'index.html', {
         'total_unpaid_fines': Fine.objects.filter(paid=False).aggregate(Sum('amount'))['amount__sum'],
         'upcoming_training': Training.objects.filter(verified=False, date__gte=timezone.now()).order_by('date').first(),
+        # TODO: personal total fine
         # TODO: player with highest fine
         # TODO: player with highest unpaid fine
         # TODO: player with highest attendance
