@@ -145,7 +145,7 @@ def verify(request, pk):
                 # even on the amount of minutes late. The latter could even be
                 # implemented automatically, but then we need a route for partial
                 # "he was late" requests.
-                Fine.objects.update_or_create(attendance=attendance, amount=5)
+                Fine.objects.update_or_create(attendance=attendance, amount=10)
         
         training.verified = True
         training.save()
