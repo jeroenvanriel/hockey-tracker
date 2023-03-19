@@ -3,7 +3,7 @@ from django.conf import settings
 import datetime
 from .apps import DEADLINE_DELTA, DEADLINE_TIME
 
-class Training(models.Model):
+class Event(models.Model):
     class Meta:
         permissions = [
             ('verify_training', 'Verify attendance of players that said they would come.')
@@ -36,7 +36,7 @@ class Player(models.Model):
 
 class Attendance(models.Model):
     player = models.ForeignKey(Player, related_name='attendances', on_delete=models.CASCADE)
-    training = models.ForeignKey(Training, on_delete=models.CASCADE)
+    training = models.ForeignKey(Event, on_delete=models.CASCADE)
     presence = models.BooleanField(default=True)
     actual_presence = models.BooleanField(default=None, null=True, blank=True)
 

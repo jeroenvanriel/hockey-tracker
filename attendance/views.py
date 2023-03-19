@@ -10,12 +10,12 @@ from django.db.models.functions import Coalesce
 from django.db import models
 from django.utils import timezone
 
-from .models import Player, Training, Attendance, Fine
+from .models import Player, Event, Attendance, Fine
 
 def index(request):
     return render(request, 'index.html', {
         'total_unpaid_fines': Fine.objects.filter(paid=False).aggregate(Sum('amount'))['amount__sum'],
-        'upcoming_training': Training.objects.filter(verified=False, date__gte=timezone.now()).order_by('date').first(),
+        'upcoming_training': Event.objects.filter(verified=False, date__gte=timezone.now()).order_by('date').first(),
         # TODO: personal total fine
         # TODO: player with highest fine
         # TODO: player with highest unpaid fine
@@ -72,7 +72,7 @@ def fine_paid(request, pk):
 
 
 def training_overview(request):
-    trainings = Training.objects.filter(verified=False, date__gte = timezone.now()).order_by('date')
+    trainings = Event.objects.filter(verified=False, date__gte = timezone.now()).order_by('date')
 
     # this way, because I don't know how to do this with an annotation
     for training in trainings:
@@ -85,7 +85,7 @@ def training_overview(request):
 
 @login_required
 def update_presence(request, pk):
-    training = get_object_or_404(Training, pk=pk)
+    training = get_object_or_404(Event, pk=pk)
     deadline_passed = timezone.now() > training.deadline if training.deadline else False
     player = Player.objects.filter(user=request.user).first()
 
@@ -124,7 +124,7 @@ def update_presence(request, pk):
 
 @permission_required('attendance.training_verify')
 def verify(request, pk):
-    training = get_object_or_404(Training, pk=pk)
+    training = get_object_or_404(Event, pk=pk)
 
     if request.method == 'POST':
         print(request.POST)
