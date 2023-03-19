@@ -3,12 +3,12 @@
 {% block content %}
 
 {% if players_present %}
-    <h4 class="mt-4">{{ training.date | date:"d F Y" }}
-        <span style="font-size: medium;">{{ training.date | date:"H:i" }}</span>
+    <h4 class="mt-4">{{ event.date | date:"d F Y" }}
+        <span style="font-size: medium;">{{ event.date | date:"H:i" }}</span>
         <div style="float:right;">{{ nr_players_present }} verwacht</div>
     </h4> 
 
-    <form action="{% url 'verify' training.id %}" method="post">
+    <form action="{% url 'verify' event.id %}" method="post">
         {% csrf_token %}
 
         <div class="mt-4 list-group btn-group-vertical btn-group-toggle" data-toggle="buttons">

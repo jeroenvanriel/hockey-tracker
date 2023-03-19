@@ -15,7 +15,7 @@ from .models import Player, Event, Attendance, Fine
 def index(request):
     return render(request, 'index.html', {
         'total_unpaid_fines': Fine.objects.filter(paid=False).aggregate(Sum('amount'))['amount__sum'],
-        'upcoming_training': Event.objects.filter(verified=False, date__gte=timezone.now()).order_by('date').first(),
+        'upcoming_event': Event.objects.filter(verified=False, date__gte=timezone.now()).order_by('date').first(),
         # TODO: personal total fine
         # TODO: player with highest fine
         # TODO: player with highest unpaid fine
@@ -71,72 +71,72 @@ def fine_paid(request, pk):
     return HttpResponseRedirect(reverse('player', args=(player.id,)))
 
 
-def training_overview(request):
-    trainings = Event.objects.filter(verified=False, date__gte = timezone.now()).order_by('date')
+def event_overview(request):
+    events = Event.objects.filter(verified=False, date__gte = timezone.now()).order_by('date')
 
     # this way, because I don't know how to do this with an annotation
-    for training in trainings:
-        cancellations = Attendance.objects.filter(training=training, player=OuterRef('pk'), presence=False)
-        actual = Attendance.objects.filter(training=training, player=OuterRef('pk'), actual_presence=False)
+    for event in events:
+        cancellations = Attendance.objects.filter(event=event, player=OuterRef('pk'), presence=False)
+        actual = Attendance.objects.filter(event=event, player=OuterRef('pk'), actual_presence=False)
         players = Player.objects.annotate(presence=~Exists(cancellations), actual_presence=~Exists(actual))
-        training.nr_players_present = players.filter(presence=True).count()
+        event.nr_players_present = players.filter(presence=True).count()
 
-    return render(request, 'attendance/training_list.html', { 'training_list': trainings })
+    return render(request, 'attendance/event_list.html', { 'event_list': events })
 
 @login_required
 def update_presence(request, pk):
-    training = get_object_or_404(Event, pk=pk)
-    deadline_passed = timezone.now() > training.deadline if training.deadline else False
+    event = get_object_or_404(Event, pk=pk)
+    deadline_passed = timezone.now() > event.deadline if event.deadline else False
     player = Player.objects.filter(user=request.user).first()
 
     if request.method == 'POST':
         if not player:
             messages.error(request, "Your account is not linked to a registered player.")
-            return HttpResponseRedirect(reverse('training', args=(training.id,)))
+            return HttpResponseRedirect(reverse('event', args=(event.id,)))
 
         choice = 'yes' in request.POST
 
         if deadline_passed:
             messages.error(request, "The deadline to update presence has passed.")
-            return HttpResponseRedirect(reverse('trainings'))
+            return HttpResponseRedirect(reverse('events'))
 
         attendance, created = Attendance.objects.update_or_create(
             player=player,
-            training=training,
+            tsraining=event,
             defaults={'presence': choice}
         )
 
-        return HttpResponseRedirect(reverse('training', args=(training.id,)))
+        return HttpResponseRedirect(reverse('tsraining', args=(event.id,)))
 
     else:
-        cancellations = Attendance.objects.filter(training=training, player=OuterRef('pk'), presence=False)
-        actual = Attendance.objects.filter(training=training, player=OuterRef('pk'), actual_presence=False)
+        cancellations = Attendance.objects.filter(event=event, player=OuterRef('pk'), presence=False)
+        actual = Attendance.objects.filter(event=event, player=OuterRef('pk'), actual_presence=False)
         players = Player.objects.annotate(presence=~Exists(cancellations), actual_presence=~Exists(actual))
         nr_players_present = players.filter(presence=True).count()
 
-        return render(request, 'attendance/training_detail.html', {
-            'training': training,
+        return render(request, 'attendance/event_detail.html', {
+            'event': event,
             'players': players,
             'deadline_passed': deadline_passed,
             'nr_players_present': nr_players_present,
-            'user_can_verify': request.user.has_perm('attendance.training_verify'),
+            'user_can_verify': request.user.has_perm('attendance.event_verify'),
         })
 
-@permission_required('attendance.training_verify')
+@permission_required('attendance.event_verify')
 def verify(request, pk):
-    training = get_object_or_404(Event, pk=pk)
+    event = get_object_or_404(Event, pk=pk)
 
     if request.method == 'POST':
         print(request.POST)
         for player in Player.objects.all():
             try:
-                said_presence = Attendance.objects.get(player=player, training=training).presence
+                said_presence = Attendance.objects.get(player=player, event=event).presence
             except Attendance.DoesNotExist:
                 said_presence = True # assume presence by default
 
             # record the actual presence
             actual_presence = str(player.pk) in request.POST.keys()
-            attendance, _ = Attendance.objects.update_or_create(player=player, training=training, defaults={
+            attendance, _ = Attendance.objects.update_or_create(player=player, event=event, defaults={
                 'actual_presence': actual_presence
             })
 
@@ -147,19 +147,19 @@ def verify(request, pk):
                 # "he was late" requests.
                 Fine.objects.update_or_create(attendance=attendance, amount=10)
         
-        training.verified = True
-        training.save()
+        event.verified = True
+        event.save()
 
-        return HttpResponseRedirect(reverse('training', args=(training.id,)))
+        return HttpResponseRedirect(reverse('event', args=(event.id,)))
 
-    elif not training.verified:
-        cancellations = Attendance.objects.filter(training=training, player=OuterRef('pk'), presence=False)
+    elif not event.verified:
+        cancellations = Attendance.objects.filter(event=event, player=OuterRef('pk'), presence=False)
         players = Player.objects.annotate(presence=~Exists(cancellations))
         players_present = players.filter(presence=True)
         nr_players_present = players.filter(presence=True).count()
 
-        return render(request, 'attendance/training_verify.html', {
-            'training': training,
+        return render(request, 'attendance/event_verify.html', {
+            'event': event,
             'players_present': players_present,
             'nr_players_present': nr_players_present,
         })
@@ -167,5 +167,5 @@ def verify(request, pk):
     else:
         # TODO: In case we want to support (partial) updates, make sure to return the actual
         # presence to show on the update page 
-        messages.error(request, "This training has already been verified.")
-        return HttpResponseRedirect(reverse('training', args=(training.id,)))
+        messages.error(request, "This event has already been verified.")
+        return HttpResponseRedirect(reverse('event', args=(event.id,)))

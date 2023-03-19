@@ -6,13 +6,15 @@ from .apps import DEADLINE_DELTA, DEADLINE_TIME
 class Event(models.Model):
     class Meta:
         permissions = [
-            ('verify_training', 'Verify attendance of players that said they would come.')
+            ('verify_event', 'Verify attendance of players that said they would come.')
         ]
 
     date = models.DateTimeField('date')
     canceled = models.BooleanField(default=False)
     deadline = models.DateTimeField('deadline', default=None, null=True, blank=True)
     verified = models.BooleanField(default=False)
+
+    type = models.TextField(default='training')
 
     def __str__(self):
         return str(self.date.date()) + (" (canceled)" if self.canceled else "")
@@ -36,12 +38,12 @@ class Player(models.Model):
 
 class Attendance(models.Model):
     player = models.ForeignKey(Player, related_name='attendances', on_delete=models.CASCADE)
-    training = models.ForeignKey(Event, on_delete=models.CASCADE)
+    event = models.ForeignKey(Event, on_delete=models.CASCADE)
     presence = models.BooleanField(default=True)
     actual_presence = models.BooleanField(default=None, null=True, blank=True)
 
     def __str__(self):
-        return f"{self.training.date.date()} - {self.player}, {self.presence}, {self.actual_presence}"
+        return f"{self.event.date.date()} - {self.player}, {self.presence}, {self.actual_presence}"
 
 class Fine(models.Model):
     attendance = models.OneToOneField(Attendance, null=True, on_delete=models.SET_NULL)

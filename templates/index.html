@@ -4,8 +4,8 @@
 
 <p>Welkom!</p>
 
-{% if upcoming_training %}
-Volgende training is <a href="{% url 'training' upcoming_training.pk %}"> {{ upcoming_training.date }} </a>.
+{% if upcoming_event %}
+Volgende event is <a href="{% url 'event' upcoming_event.pk %}"> {{ upcoming_event.date }} </a>.
 <br />
 {% endif %}
 

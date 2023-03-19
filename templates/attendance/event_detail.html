@@ -2,12 +2,12 @@
 
 {% block content %}
 
-{% if training.verified %}
-    <p><i>This training has been verified and closed.</i></p>
+{% if event.verified %}
+    <p><i>This event has been verified and closed.</i></p>
 {% elif deadline_passed %}
-    <p><i>Deadline {{training.deadline |date:"j M Y"}} to update presence has passed.</i></p>
+    <p><i>Deadline {{event.deadline |date:"j M Y"}} to update presence has passed.</i></p>
 {% else %}
-    <form action="{% url 'training' training.id %}" method="post">
+    <form action="{% url 'event' event.id %}" method="post">
         {% csrf_token %}
         <div class="row">
             <div class="col-6 d-grid">
@@ -21,16 +21,16 @@
 {% endif %}
 
 {% if players %}
-    <h4 class="mt-4">{{ training.date | date:"d F Y" }}
-        <span style="font-size: medium;">{{ training.date | date:"H:i" }}</span>
+    <h4 class="mt-4">{{ event.date | date:"d F Y" }}
+        <span style="font-size: medium;">{{ event.date | date:"H:i" }}</span>
         <div style="float:right;">{{ nr_players_present }} verwacht</div>
     </h4> 
 
     <ul class="list-group mt-4">
     {% for player in players %}
     <li class="list-group-item
-        {% if training.verified and player.actual_presence %} list-group-item-success
-        {% elif not training.verified and player.presence %} list-group-item-success
+        {% if event.verified and player.actual_presence %} list-group-item-success
+        {% elif not event.verified and player.presence %} list-group-item-success
         {% else %} list-group-item-light
         {% endif %}">
         <i class="bi bi-1-square"></i>
@@ -45,7 +45,7 @@
         {% endif %}
         &nbsp;
         <b class="{% if not player.presence %} text-muted {% endif %}">{{ player.name }}</b>
-        {% if training.verified and player.presence and not player.actual_presence %} &nbsp; <span class="badge bg-danger">boete</span> {% endif %}
+        {% if event.verified and player.presence and not player.actual_presence %} &nbsp; <span class="badge bg-danger">boete</span> {% endif %}
     </li>
     {% endfor %}
     </ul>
@@ -54,9 +54,9 @@
 {% endif %}
 </ul>
 
-{% if not training.verified and user_can_verify %}
+{% if not event.verified and user_can_verify %}
 <div class="d-grid mt-4">
-<a class="btn btn-primary" href="{% url 'verify' training.id %}">Verify</a>
+<a class="btn btn-primary" href="{% url 'verify' event.id %}">Verify</a>
 </div>
 {% endif %}
 
