@@ -1,7 +1,7 @@
 from django.db import models
 from django.conf import settings
 import datetime
-from .apps import DEADLINE_DELTA, DEADLINE_TIME
+from .apps import DEADLINE_DELTA_TRAINING, DEADLINE_DELTA_GAME, DEADLINE_TIME
 
 class Event(models.Model):
     class Meta:
@@ -23,8 +23,11 @@ class Event(models.Model):
         if not self.deadline:
             # move the deadline the specified number of days backward
             # and set the default deadline time (e.g. 23:59)
-            self.deadline = (self.date - datetime.timedelta(days=DEADLINE_DELTA)).replace(
-                hour=DEADLINE_TIME.hour, minute=DEADLINE_TIME.minute, second=DEADLINE_TIME.second)
+                self.deadline = (self.date - datetime.timedelta(days=
+                                                                DEADLINE_DELTA_TRAINING if self.type == 'training'
+                                                                else DEADLINE_DELTA_GAME
+                                                                )).replace(
+                    hour=DEADLINE_TIME.hour, minute=DEADLINE_TIME.minute, second=DEADLINE_TIME.second)
         super().save(*args, **kwargs)
 
 class Player(models.Model):

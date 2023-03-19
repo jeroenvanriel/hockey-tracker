@@ -7,5 +7,6 @@ class AttendanceConfig(AppConfig):
     name = 'attendance'
 
 
-DEADLINE_DELTA = 2
+DEADLINE_DELTA_TRAINING = 2
+DEADLINE_DELTA_GAME = 7
 DEADLINE_TIME = datetime.time(23, 59, 59)
