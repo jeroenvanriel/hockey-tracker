@@ -80,6 +80,7 @@ def event_overview(request):
         actual = Attendance.objects.filter(event=event, player=OuterRef('pk'), actual_presence=False)
         players = Player.objects.annotate(presence=~Exists(cancellations), actual_presence=~Exists(actual))
         event.nr_players_present = players.filter(presence=True).count()
+        event.type_name = {'training': 'Training', 'game': 'Wedstrijd'}[event.type]
 
     return render(request, 'attendance/event_list.html', { 'event_list': events })
 

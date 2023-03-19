@@ -8,6 +8,7 @@
     <div class="list-group">
     {% for event in event_list %}
     <a class="list-group-item list-group-item-action" href="{% url 'event' event.id %}">
+        {{ event.type_name }}
         {{ event.date | date:"d F Y" }} &nbsp;
         <span style="font-size: small;">{{ event.date | date:"H:i" }}</span>
         <div style="float: right;">{{ event.nr_players_present }} verwacht</div> 
