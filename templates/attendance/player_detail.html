@@ -21,7 +21,7 @@
     {% for attendance in player.attendances.all %}
         {% if attendance.fine %}
         <tr>
-            <td>{{ attendance.training.date | date:"d F Y" }}</td>
+            <td>{{ attendance.event.date | date:"d F Y" }}</td>
             <td>€ {{ attendance.fine.amount | floatformat:2 }}</td>
             <td style="text-align: center;"">
                 {% if attendance.fine.paid %}
