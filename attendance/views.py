@@ -107,7 +107,7 @@ def update_presence(request, pk):
             defaults={'presence': choice}
         )
 
-        return HttpResponseRedirect(reverse('tsraining', args=(event.id,)))
+        return HttpResponseRedirect(reverse('event', args=(event.id,)))
 
     else:
         cancellations = Attendance.objects.filter(event=event, player=OuterRef('pk'), presence=False)
