@@ -103,7 +103,7 @@ def update_presence(request, pk):
 
         attendance, created = Attendance.objects.update_or_create(
             player=player,
-            tsraining=event,
+            event=event,
             defaults={'presence': choice}
         )
 
