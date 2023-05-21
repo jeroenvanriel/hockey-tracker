@@ -2,20 +2,54 @@
 
 {% block content %}
 
-<h2 class="mb-3">Komende Activiteiten</h2>
-
-{% if event_list %}
-    <div class="list-group">
-    {% for event in event_list %}
+{% if today_events %}
+<h2 class="mb-3">Vandaag</h2>
+    <div class="list-group mb-3">
+    {% for event in today_events %}
     <a class="list-group-item list-group-item-action" href="{% url 'event' event.id %}">
         {{ event.type_name }}
         {{ event.date | date:"d F Y" }} &nbsp;
         <span style="font-size: small;">{{ event.date | date:"H:i" }}</span>
         <div style="float: right;">{{ event.nr_players_present }} verwacht</div> 
+        {% if event.verified %} <span style="float: right;" class="badge bg-success mx-2">verified</span> {% endif %}
     </a>
     {% endfor %}
     </div>
-{% else %}
-    <p>No events registered.</p>
 {% endif %}
+
+
+{% if upcoming_events %}
+<h2 class="mb-3">Komende Activiteiten</h2>
+    <div class="list-group mb-3">
+    {% for event in upcoming_events %}
+    <a class="list-group-item list-group-item-action" href="{% url 'event' event.id %}">
+        {{ event.type_name }}
+        {{ event.date | date:"d F Y" }} &nbsp;
+        <span style="font-size: small;">{{ event.date | date:"H:i" }}</span>
+        {% if event.verified %} <span style="float: right;" class="badge bg-success mx-2">verified</span> {% endif %}
+        <div style="float: right;">{{ event.nr_players_present }} verwacht</div> 
+    </a>
+    {% endfor %}
+    </div>
+{% endif %}
+
+{% if past_events %}
+<h2 class="mb-3">Vorige Activiteiten</h2>
+    <div class="list-group mb-3">
+    {% for event in past_events %}
+    <a class="list-group-item list-group-item-action" href="{% url 'event' event.id %}">
+        {{ event.type_name }}
+        {{ event.date | date:"d F Y" }} &nbsp;
+        <span style="font-size: small;">{{ event.date | date:"H:i" }}</span>
+        <div style="float: right;">{{ event.nr_players_actual_present }} aanwezig</div> 
+        {% if event.verified %} <span style="float: right;" class="badge bg-success mx-2">verified</span> {% endif %}
+    </a>
+    {% endfor %}
+    </div>
+{% endif %}
+
+{% if not today_events and not upcoming_events and not past_events %}
+<p>Geen evenementen geregistreerd.</p>
+{% endif %}
+
 {% endblock %}

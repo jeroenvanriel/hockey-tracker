@@ -72,17 +72,24 @@ def fine_paid(request, pk):
 
 
 def event_overview(request):
-    events = Event.objects.filter(verified=False, date__gte = timezone.now()).order_by('date')
+    upcoming_events = Event.objects.filter(date__date__gt=timezone.now()).order_by('date')
+    today_events = Event.objects.filter(date__date=timezone.now()).order_by('date')
+    past_events = Event.objects.filter(date__date__lt=timezone.now()).order_by('date')
 
     # this way, because I don't know how to do this with an annotation
-    for event in events:
+    for event in [*upcoming_events, *today_events, *past_events]:
         cancellations = Attendance.objects.filter(event=event, player=OuterRef('pk'), presence=False)
         actual = Attendance.objects.filter(event=event, player=OuterRef('pk'), actual_presence=False)
         players = Player.objects.annotate(presence=~Exists(cancellations), actual_presence=~Exists(actual))
         event.nr_players_present = players.filter(presence=True).count()
+        event.nr_players_actual_present = players.filter(actual_presence=True).count()
         event.type_name = {'training': 'Training', 'game': 'Wedstrijd'}[event.type]
 
-    return render(request, 'attendance/event_list.html', { 'event_list': events })
+    return render(request, 'attendance/event_list.html', {
+        'upcoming_events': upcoming_events,
+        'today_events': today_events,
+        'past_events': past_events,
+    })
 
 @login_required
 def update_presence(request, pk):
