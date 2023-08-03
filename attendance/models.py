@@ -30,6 +30,7 @@ class Event(models.Model):
                     hour=DEADLINE_TIME.hour, minute=DEADLINE_TIME.minute, second=DEADLINE_TIME.second)
         super().save(*args, **kwargs)
 
+
 class Player(models.Model):
     """This decoupling from the user (authentication) enables us to start using the app before
     users login and do certain things themselves."""
@@ -39,6 +40,7 @@ class Player(models.Model):
     def __str__(self):
         return self.name
 
+
 class Attendance(models.Model):
     player = models.ForeignKey(Player, related_name='attendances', on_delete=models.CASCADE)
     event = models.ForeignKey(Event, on_delete=models.CASCADE)
@@ -47,6 +49,7 @@ class Attendance(models.Model):
 
     def __str__(self):
         return f"{self.event.date.date()} - {self.player}, {self.presence}, {self.actual_presence}"
+
 
 class Fine(models.Model):
     attendance = models.OneToOneField(Attendance, null=True, on_delete=models.SET_NULL)
